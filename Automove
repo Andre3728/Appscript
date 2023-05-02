@@ -1,0 +1,65 @@
+function MovingDailyData() {
+
+  
+  
+    var SourceSheet = SpreadsheetApp.openById("Sheets ID");
+
+
+  //Reading Script Config--------------------------------------//
+    var ScriptConfig = SourceSheet.getSheetByName('Script Config');    
+
+
+    var Source_TabName    = ScriptConfig.getRange('A4').getValue();
+    var Source_firtsCol   = ScriptConfig.getRange('B4').getValue();
+    var Source_lastCol    = ScriptConfig.getRange('C4').getValue();
+
+    var Source_firtsRow   = ScriptConfig.getRange('D4').getValue();
+    var Source_lastRow    = SourceSheet.getSheetByName(Source_TabName).getLastRow();
+    
+
+    var Target_TabName   = ScriptConfig.getRange('H4').getValue();
+    var Target_firtsCol  = ScriptConfig.getRange('I4').getValue();
+    var Target_lastCol   = ScriptConfig.getRange('J4').getValue();
+
+    var Target_firtsRow  = ScriptConfig.getRange('K4').getValue();
+    var Target_lastRow   = SourceSheet.getSheetByName(Target_TabName).getLastRow();
+    
+    
+
+  //Get_Source
+
+    var SourceDataPointer = 
+        Source_firtsCol + Source_firtsRow + ':' + Source_lastCol + Source_lastRow
+
+    var dataSourceValue = SourceSheet
+      .getSheetByName(Source_TabName)
+      .getRange(SourceDataPointer)
+      .getValues();
+
+    var dataSourceValueSize = dataSourceValue.filter(String).length
+
+
+  
+
+    
+  //Apply Data
+
+    var TargetDataPointer = 
+    Target_firtsCol + (Target_lastRow+1)+
+    ':'+
+    Target_lastCol+(Target_lastRow+dataSourceValueSize)
+
+
+    
+
+    SourceSheet.getSheetByName(Target_TabName)
+    .getRange(TargetDataPointer)
+    .setValues(dataSourceValue);
+    
+
+  //Logger
+
+    Logger.log('Data Source Range:' +SourceDataPointer)
+    Logger.log('Data Source Size :' +dataSourceValueSize)
+    Logger.log('Target Data Range: '+TargetDataPointer);
+}
